@@ -9,3 +9,7 @@
 node_modules/
 vendor/
 .terraform/
+
+*.env
+*.aes
+dockercfg
