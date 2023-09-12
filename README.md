@@ -3,9 +3,9 @@ Perl script to create a backup of the YouTrack Cloud database and store
 it in a Backblaze B2 bucket.
 
 ## Environment variables
-* `YT\_TOKEN` - YouTrack permanent access token
-* `B2\_APPLICATION\_KEY\_ID` - Backblaze application key ID
-* `B2\_APPLICATION\_KEY` - Backblaze application key secret
+* `YT_TOKEN` - YouTrack permanent access token
+* `B2_APPLICATION_KEY_ID` - Backblaze application key ID
+* `B2_APPLICATION_KEY` - Backblaze application key secret
 
 ## Arguments
 * `--baseurl` - YouTrack Cloud URL.
@@ -20,7 +20,7 @@ it in a Backblaze B2 bucket.
     1. Navigate to the `Account Security` tab in your `Profile`.
     1. Click `New token...` in the `Tokens` section.
     1. Provide a name for the token and ensure the `Scope` contains `YouTrack` and `YouTrack Administration`.
-    1. Set and export the environment variable `YT\_TOKEN` with the YouTrack Cloud access token as its value (e.g., use a command like ` export YT\_TOKEN=_youtrack-cloud-access-token_`). Note that preceding the `export` command with a space may prevent the command from being stored in the shell history. Refer to the description of the `HISTCONTROL` shell variable in the `bash` man page for details.
+    1. Set and export the environment variable `YT_TOKEN` with the YouTrack Cloud access token as its value (e.g., use a command like ` export YT_TOKEN=_youtrack-cloud-access-token_`). Note that preceding the `export` command with a space may prevent the command from being stored in the shell history. Refer to the description of the `HISTCONTROL` shell variable in the `bash` man page for details.
 1. Install [b2](https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux).
 1. Create a Backblaze B2 bucket.
     1. Log into Backblaze.
@@ -43,16 +43,16 @@ it in a Backblaze B2 bucket.
         * Duration: _leave blank_
     1. Click `Create New Key`.
     1. Save the `keyID`, `keyName`, and `applicationKey` in a secure location.
-1. Set and export the environment variable `B2\_APPLICATION\_KEY\_ID` with the Backblaze access token ID as its value.
-1. Set and export the environment variable `B2\_APPLICATION\_KEY` with the Backblaze access token secret as its value.
+1. Set and export the environment variable `B2_APPLICATION_KEY_ID` with the Backblaze access token ID as its value.
+1. Set and export the environment variable `B2_APPLICATION_KEY` with the Backblaze access token secret as its value.
 1. To perform a YouTrack Cloud database backup:
-`youtrack-backup.pl --baseurl _yt-url_ --bucket _b2-bucket-name_`
+`youtrack-backup.pl --baseurl `_yt-url_` --bucket `_b2-bucket-name_
 
 ## Example use with Docker and Backblaze
 
 ### Additional environment variables
-*  YT\_URL  - URL to your instance of YouTrack Cloud.
-*  B2\_BUCKET  - Name of the Backblaze B2 bucket.
+*  `YT_URL`  - URL to your instance of YouTrack Cloud.
+*  `B2_BUCKET`  - Name of the Backblaze B2 bucket.
 
 The image created by the Dockerfile will run `youtrack-backup.pl` with `--delay` defaulted to `30` and `--quiet` disabled.
 
