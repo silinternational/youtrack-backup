@@ -20,7 +20,7 @@ it in a Backblaze B2 bucket.
     1. Navigate to the `Account Security` tab in your `Profile`.
     1. Click `New token...` in the `Tokens` section.
     1. Provide a name for the token and ensure the `Scope` contains `YouTrack` and `YouTrack Administration`.
-    1. Set and export the environment variable `YT_TOKEN` with the YouTrack Cloud access token as its value (e.g., use a command like ` export YT_TOKEN=_youtrack-cloud-access-token_`). Note that preceding the `export` command with a space may prevent the command from being stored in the shell history. Refer to the description of the `HISTCONTROL` shell variable in the `bash` man page for details.
+    1. Set and export the environment variable `YT_TOKEN` with the YouTrack Cloud access token as its value (e.g., use a command like ` export YT_TOKEN=`_youtrack-cloud-access-token_). Note that preceding the `export` command with a space may prevent the command from being stored in the shell history. Refer to the description of the `HISTCONTROL` shell variable in the `bash` man page for details.
 1. Install [b2](https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux).
 1. Create a Backblaze B2 bucket.
     1. Log into Backblaze.
@@ -46,7 +46,7 @@ it in a Backblaze B2 bucket.
 1. Set and export the environment variable `B2_APPLICATION_KEY_ID` with the Backblaze access token ID as its value.
 1. Set and export the environment variable `B2_APPLICATION_KEY` with the Backblaze access token secret as its value.
 1. To perform a YouTrack Cloud database backup:
-`youtrack-backup.pl --baseurl `_yt-url_` --bucket `_b2-bucket-name_
+`youtrack-backup.pl --baseurl=`_yt-url_`  --bucket=`_b2-bucket-name_
 
 ## Example use with Docker and Backblaze
 
