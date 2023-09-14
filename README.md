@@ -27,7 +27,7 @@ it in a Backblaze B2 bucket.
     1. In the left navigation area, click `Buckets`.
     1. Click `Create a Bucket`.
         * Bucket Unique Name: _supply a name_
-        * File in Bucket are: `Private`
+        * Files in Bucket are: `Private`
         * Default Encryption: `Enable`
         * Object Lock: `Disable`
     1. Click `Create a Bucket`.
@@ -46,7 +46,7 @@ it in a Backblaze B2 bucket.
 1. Set and export the environment variable `B2_APPLICATION_KEY_ID` with the Backblaze access token ID as its value.
 1. Set and export the environment variable `B2_APPLICATION_KEY` with the Backblaze access token secret as its value.
 1. To perform a YouTrack Cloud database backup:
-`youtrack-backup.pl --baseurl=`_yt-url_`  --bucket=`_b2-bucket-name_
+youtrack-backup.pl --baseurl _yt-url_ --bucket _b2-bucket-name_
 
 ## Example use with Docker and Backblaze
 
