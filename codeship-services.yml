@@ -1,5 +1,0 @@
-app:
-  build:
-    image: silintl/youtrack-backup
-    dockerfile: ./Dockerfile
-  cached: true
