@@ -6,10 +6,10 @@
 #   export YT_TOKEN=<youtrack-permanent-token>
 #   export B2_APPLICATION_KEY_ID=<backblaze-application-id>
 #   export B2_APPLICATION_KEY=<backblaze-application-key>
-#   youtrack-db-backup.pl --baseurl=yt-url --bucket=b2-bucket-name [--delay=seconds] [--quiet] [--help]
+#   youtrack-db-backup.pl --baseurl=yt-url --bucket=b2-bucket-name [--delay=seconds] [--keep=count] [--quiet] [--help]
 #
 # For the supplied YouTrack instance (baseurl), create a database backup and
-# store it in a Backblaze B2 bucket.
+# store it in a Backblaze B2 bucket. Optionally, delete old backup files.
 #
 # Uses curl(1), jq(1), b2(https://www.backblaze.com/docs/cloud-storage-command-line-tools).
 #
@@ -28,13 +28,14 @@ sub tstamp()
 	return strftime "%H:%M:%S", gmtime;
 }
 
-my $usage = "Usage: $0 --baseurl=yt-url --bucket=b2-bucket-name [--delay=seconds] [--quiet] [--help]\n";
+my $usage = "Usage: $0 --baseurl=yt-url --bucket=b2-bucket-name [--delay=seconds] [--keep=count] [--quiet] [--help]\n";
 my $yt_token;		# YouTrack Permanent Token
 my $yt_url;		# YouTrack base URL
 my $b2_app_key_id;	# Backblaze application key ID
 my $b2_app_key_secret;	# Backblaze application key secret
 my $b2_bucket;		# Backblaze B2 bucket name
 my $delay;		# seconds to delay between checking backup progress
+my $keep_count;		# number of backup files to keep
 my $quiet;
 my $help;
 
@@ -43,6 +44,7 @@ GetOptions(
 	'bucket|b=s'  => \$b2_bucket,
 	'baseurl|u=s' => \$yt_url,
 	'delay|d'     => \$delay,
+	'keep|k=i'    => \$keep_count,
 	'quiet|q'     => \$quiet,
 	'help|h'      => \$help
 ) or die $usage;
@@ -78,7 +80,8 @@ my $cache_header    = "--header \"Cache-Control: no-cache\"";
 my $content_header  = "--header \"Content-Type: application/json\"";
 my $progress_header = "--no-progress-meter";
 
-$delay = 30 if (! defined($delay));
+$delay      = 30 if (! defined($delay));
+$keep_count =  0 if (! defined($keep_count));
 
 my $curl_query1;
 my $curl_query2;
@@ -191,5 +194,41 @@ if ($result != 0) {
 printf "%s: Upload to Backblaze B2 bucket complete\n", tstamp() if (! $quiet);
 
 unlink($download_path);
+
+#
+# Optionally, delete old backup files from the Backblaze B2 bucket
+#
+# The backup file names are of the form YYYY-MM-DD-hh-mm-ss.tar.gz.  The
+# 'b2 ls --long' command returns lines in this form:
+#
+# fileID  upload  date  time  size  fileName
+#
+# We keep the sixth and first fields, sort, and throw away the last $keep_count
+# entries.  The remaining files (if any) will be deleted.
+
+if ($keep_count > 0) {
+	printf "%s: Deleting old backup files\n", tstamp() if (! $quiet);
+	$cmd = "b2 ls --long $b2_bucket";
+	my @filelist = `$cmd`;
+
+	if (scalar @filelist - ${keep_count} > 0) {
+		chomp @filelist;
+		s/  .*  /  / for @filelist;		# keep only first and last fields
+		s/^(.*)  (.*)$/$2  $1/ for @filelist;	# swap order of fields
+
+		@filelist = sort @filelist;
+		splice @filelist, -${keep_count};
+
+		foreach my $line (@filelist) {
+			(my $filename, my $fileid) = split /  /,$line;
+			printf "%s: Deleting $filename\n", tstamp() if (! $quiet);
+			$cmd = "b2 delete-file-version $filename $fileid";
+			$result = system($cmd);
+		}
+	}
+	else {
+		printf "%s: Number of files (%d) does not exceed the number to keep ($keep_count)\n", tstamp(), scalar @filelist if (! $quiet);
+	}
+}
 
 exit(0);

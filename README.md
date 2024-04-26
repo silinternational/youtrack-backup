@@ -1,6 +1,6 @@
 # youtrack-backup
-Perl script to create a backup of the YouTrack Cloud database and store
-it in a Backblaze B2 bucket.
+Perl script to create a backup of the YouTrack Cloud database, store
+it in a Backblaze B2 bucket, and optionally delete old backup files.
 
 ## Environment variables
 * `YT_TOKEN` - YouTrack permanent access token
@@ -11,6 +11,7 @@ it in a Backblaze B2 bucket.
 * `--baseurl` - YouTrack Cloud URL.
 * `--bucket` - Backblaze bucket name.
 * `--delay` - [optional] Seconds to wait between checks for database backup completion. (Default: 30)
+* `--keep` - [optional] Number of backup files to keep. (Default: 0, keep all backup files)
 * `--quiet` - [optional] Don't print information progress messages.
 * `--help` - [optional] Print usage message and exit.
 
@@ -53,8 +54,9 @@ youtrack-backup.pl --baseurl _yt-url_ --bucket _b2-bucket-name_
 ### Additional environment variables
 *  `YT_URL`  - URL to your instance of YouTrack Cloud.
 *  `B2_BUCKET`  - Name of the Backblaze B2 bucket.
+*  `KEEP_COUNT`  - Number of backups to keep.
 
-The image created by the Dockerfile will run `youtrack-backup.pl` with `--delay` defaulted to `30` and `--quiet` disabled.
+The image created by the Dockerfile will run `youtrack-backup.pl` with `--delay` defaulted to `30`, `--keep` defaulted to `0`, and `--quiet` disabled.
 
 1. Copy `local.env.dist` to `local.env`.
 1. Set the values for the variables contained in `local.env`.
