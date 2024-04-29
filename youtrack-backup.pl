@@ -43,7 +43,7 @@ Getopt::Long::Configure qw(gnu_getopt);
 GetOptions(
 	'bucket|b=s'  => \$b2_bucket,
 	'baseurl|u=s' => \$yt_url,
-	'delay|d'     => \$delay,
+	'delay|d=i'   => \$delay,
 	'keep|k=i'    => \$keep_count,
 	'quiet|q'     => \$quiet,
 	'help|h'      => \$help
