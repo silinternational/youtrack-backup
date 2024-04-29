@@ -34,8 +34,8 @@ my $yt_url;		# YouTrack base URL
 my $b2_app_key_id;	# Backblaze application key ID
 my $b2_app_key_secret;	# Backblaze application key secret
 my $b2_bucket;		# Backblaze B2 bucket name
-my $delay;		# seconds to delay between checking backup progress
-my $keep_count;		# number of backup files to keep
+my $delay = 30;		# seconds to delay between checking backup progress
+my $keep_count = 0;	# number of backup files to keep (0 = keep all)
 my $quiet;
 my $help;
 
@@ -79,9 +79,6 @@ my $accept_header   = "--header \"Accept: application/json\"";
 my $cache_header    = "--header \"Cache-Control: no-cache\"";
 my $content_header  = "--header \"Content-Type: application/json\"";
 my $progress_header = "--no-progress-meter";
-
-$delay      = 30 if (! defined($delay));
-$keep_count =  0 if (! defined($keep_count));
 
 my $curl_query1;
 my $curl_query2;
