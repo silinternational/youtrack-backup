@@ -13,8 +13,7 @@
 #
 # Uses curl(1), jq(1), b2(https://www.backblaze.com/docs/cloud-storage-command-line-tools).
 #
-# Dale Newby
-# SIL International
+# SIL - GTIS
 # September 6, 2023
 
 use strict;
