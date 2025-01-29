@@ -23,6 +23,18 @@ use Getopt::Long qw(GetOptions);
 use File::Temp;
 use POSIX qw(strftime);
 
+# Add Sentry notification function
+sub error_to_sentry {
+    my ($error_message) = @_;
+    return unless $ENV{SENTRY_DSN};
+    
+    my $sentry_cmd = sprintf(
+        'sentry-cli send-event --message "%s" --level error --tag backup_type=youtrack',
+        $error_message
+    );
+    system($sentry_cmd);
+}
+
 sub tstamp()
 {
 	return strftime "%H:%M:%S", gmtime;
@@ -99,6 +111,7 @@ $result = `$curl_cmd | jq '.backupStatus.backupError'`;
 
 chomp($result);
 if ($result ne "null") {
+	error_to_sentry("Database backup failed: $result");
 	die "Database backup failed: $result\n";
 }
 
@@ -162,6 +175,7 @@ $curl_cmd   = "curl $accept_header $auth_header $progress_header $curl_query";
 printf "%s: Downloading file $download_path\n", tstamp() if (! $quiet);
 $result = system($curl_cmd);
 if ($result != 0) {
+	error_to_sentry("Download failed: $result");
 	die "Download failed: $result\n";
 }
 
@@ -183,6 +197,7 @@ my $tmpfile = File::Temp->new( TEMPLATE => '/tmp/XXXXXXXXXX' );
 my $cmd     = "b2 upload-file --noProgress $b2_bucket $download_path $file_name > $tmpfile";
 $result     = system($cmd);
 if ($result != 0) {
+	error_to_sentry("Upload failed: $result");
 	`cat $tmpfile`;
 	unlink($download_path);
 	die "Upload failed: $result\n";
